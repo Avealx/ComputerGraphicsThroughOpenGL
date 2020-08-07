@@ -1,9 +1,1 @@
-add_executable(mytest 
-    ${CMAKE_CURRENT_SOURCE_DIR}/test.cpp
-)
-target_link_libraries(mytest
-    PRIVATE
-    OpenGL::OpenGL
-    GLUT::GLUT
-    GLEW_1130
-)
+add_subdirectory( Chapter01 )
