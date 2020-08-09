@@ -47,12 +47,43 @@ void exercise_2_19_spiral() {
   glEnd();
 }
 
+void exercise_2_20_disc_polygon() {
+  float t = 0; // Angle parameter.
+  int i;
+  glBegin(GL_POLYGON);
+  for (i = 0; i < numVertices; ++i) {
+    glColor3f((float)rand() / (float)RAND_MAX, (float)rand() / (float)RAND_MAX,
+              (float)rand() / (float)RAND_MAX);
+    glVertex3f(X + R * cos(t), Y + R * sin(t), 0.0);
+    t += 2 * PI / numVertices;
+  }
+  glEnd();
+}
+
+void exercise_2_20_disc_triangle_fan() {
+  float t = 0; // Angle parameter.
+  int i;
+  glBegin(GL_TRIANGLE_FAN);
+  for (i = 0; i < numVertices; ++i) {
+    glColor3f((float)rand() / (float)RAND_MAX, (float)rand() / (float)RAND_MAX,
+              (float)rand() / (float)RAND_MAX);
+    glVertex3f(X + R * cos(t), Y + R * sin(t), 0.0);
+    t += 2 * PI / numVertices;
+  }
+  glEnd();
+}
+
 // Drawing routine.
 void drawScene(void)
 {
   glClear(GL_COLOR_BUFFER_BIT);
   // draw_circle();
-  exercise_2_19_spiral();
+
+  // exercise_2_19_spiral();
+
+  // exercise_2_20_disc_polygon();
+
+  exercise_2_20_disc_triangle_fan();
 
   glFlush();
 }
