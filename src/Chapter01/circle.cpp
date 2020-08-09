@@ -73,6 +73,21 @@ void exercise_2_20_disc_triangle_fan() {
   glEnd();
 }
 
+void exercise_2_22_circular_annylus() {
+  float r = R / 2.0;
+  float t = 0; // Angle parameter.
+  int i;
+  glBegin(GL_TRIANGLE_STRIP);
+  for (i = 0; i <= numVertices; ++i) {
+    glColor3f((float)rand() / (float)RAND_MAX, (float)rand() / (float)RAND_MAX,
+              (float)rand() / (float)RAND_MAX);
+    glVertex3f(X + R * cos(t), Y + R * sin(t), 0.0);
+    glVertex3f(X + r * cos(t), Y + r * sin(t), 0.0);
+    t += 2 * PI / numVertices;
+  }
+  glEnd();
+}
+
 // Drawing routine.
 void drawScene(void)
 {
@@ -83,7 +98,9 @@ void drawScene(void)
 
   // exercise_2_20_disc_polygon();
 
-  exercise_2_20_disc_triangle_fan();
+  // exercise_2_20_disc_triangle_fan();
+
+  exercise_2_22_circular_annylus();
 
   glFlush();
 }
