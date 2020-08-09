@@ -175,14 +175,23 @@ void drawScene(void) {
   glClear(GL_COLOR_BUFFER_BIT);
 
   // draw_cube_in_cube();
+
   // draw_cube_color_interpolation();
+
   // line_color_interpolation();
+
   // different_polygon_modes();
+
   // exercise_2_13_annulus();
+
   // exercise_2_14_u_shape();
+
   // experiment_2_15_triangle_fan();
+
   // exercise_2_15_annulus_triangle_fans();
+
   // experiment_2_16_rect();
+
   exercise_2_18_double_annulus_triangle_strip();
 
   glFlush();
