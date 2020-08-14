@@ -18,6 +18,16 @@ target_link_libraries( circularAnnuluses
     GLEW_1130
 )
 
+add_executable( helix
+    ${CMAKE_CURRENT_SOURCE_DIR}/helix.cpp
+)
+target_link_libraries( helix 
+    PRIVATE
+    OpenGL::OpenGL
+    GLUT::GLUT
+    GLEW_1130
+)
+
 add_executable( parabola
     ${CMAKE_CURRENT_SOURCE_DIR}/parabola.cpp
 )
