@@ -28,6 +28,16 @@ target_link_libraries( helix
     GLEW_1130
 )
 
+add_executable( hemisphere
+    ${CMAKE_CURRENT_SOURCE_DIR}/hemisphere.cpp
+)
+target_link_libraries( hemisphere 
+    PRIVATE
+    OpenGL::OpenGL
+    GLUT::GLUT
+    GLEW_1130
+)
+
 add_executable( moveSphere
     ${CMAKE_CURRENT_SOURCE_DIR}/moveSphere.cpp
 )
