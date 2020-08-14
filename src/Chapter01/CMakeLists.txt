@@ -28,6 +28,16 @@ target_link_libraries( helix
     GLEW_1130
 )
 
+add_executable( moveSphere
+    ${CMAKE_CURRENT_SOURCE_DIR}/moveSphere.cpp
+)
+target_link_libraries( moveSphere 
+    PRIVATE
+    OpenGL::OpenGL
+    GLUT::GLUT
+    GLEW_1130
+)
+
 add_executable( parabola
     ${CMAKE_CURRENT_SOURCE_DIR}/parabola.cpp
 )

@@ -38,8 +38,8 @@ void resize(int w, int h)
   glViewport(0, 0, w, h);
   glMatrixMode(GL_PROJECTION);
   glLoadIdentity();
-  glOrtho(-50.0, 50.0, -50.0, 50.0, 0.0, 100.0);
-  // glFrustum(-5.0, 5.0, -5.0, 5.0, 5.0, 100.0);
+  // glOrtho(-50.0, 50.0, -50.0, 50.0, 0.0, 100.0);
+  glFrustum(-5.0, 5.0, -5.0, 5.0, 5.0, 100.0);
   glMatrixMode(GL_MODELVIEW);
   glLoadIdentity();
 }
