@@ -25,18 +25,27 @@ void writeBitmapString(void *font, char *string)
     glutBitmapCharacter(font, *c);
 }
 
-// Function to draw a disc with center at (X, Y, Z), radius R, parallel to the xy-plane.
-void drawDisc(float R, float X, float Y, float Z)
-{
+void _drawCircle(float R, float X, float Y, float Z) {
   float t;
   int i;
-
-  glBegin(GL_TRIANGLE_FAN);
-  glVertex3f(X, Y, Z);
   for (i = 0; i <= N; ++i) {
     t = 2 * PI * i / N;
     glVertex3f(X + cos(t) * R, Y + sin(t) * R, Z);
   }
+}
+
+// Function to draw a disc with center at (X, Y, Z), radius R, parallel to the xy-plane.
+void drawDisc(float R, float X, float Y, float Z) {
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex3f(X, Y, Z);
+  _drawCircle(R, X, Y, Z);
+  glEnd();
+}
+
+void drawCone(float R, float X, float Y, float Z, float ZApex) {
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex3f(X, Y, ZApex);
+  _drawCircle(R, X, Y, Z);
   glEnd();
 }
 
@@ -106,6 +115,11 @@ void drawBullsEyeTarget() {
   glDisable(GL_DEPTH_TEST); // Disable depth testing.
 }
 
+void drawClippedAnnulus() {
+  glColor3f(0.3, 0.8, 0.2);
+  drawCone(25.0, 50.0, 50.0, 0.0, 1.5);
+}
+
 // Drawing routine.
 void drawScene(void) {
   glClear(GL_COLOR_BUFFER_BIT |
@@ -114,7 +128,10 @@ void drawScene(void) {
   //  drawOriginalAnnuluses();
 
   // exercise 2.24
-  drawBullsEyeTarget();
+  // drawBullsEyeTarget();
+
+  // exercise 2.25
+  drawClippedAnnulus();
 
   glFlush();
 }
