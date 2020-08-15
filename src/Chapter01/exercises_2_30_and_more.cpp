@@ -9,6 +9,7 @@
 // clang-format on
 
 #define PI 3.14159265
+#define EPS 1e-5
 
 void drawSine() {
   float scale = 8.0;
@@ -24,10 +25,26 @@ void drawSine() {
   glEnd();
 }
 
+void drawEllipse(float axis1, float axis2) {
+  glClear(GL_COLOR_BUFFER_BIT);
+  glColor3f(0.0, 0.0, 0.0);
+
+  glBegin(GL_LINE_STRIP);
+  float period = 2.0 * M_PI;
+  int n_steps = 100;
+  for (float tt = 0.0; tt <= period + EPS; tt += period / n_steps)
+    glVertex3f(axis1 * sin(tt), axis2 * cos(tt), -10.0);
+  glEnd();
+}
+
 // Drawing routine.
 void drawScene(void) {
   // exercise 2.30
   drawSine();
+
+  // exercise 2.31
+  float axis1 = 8.0, axis2 = 6.0;
+  drawEllipse(axis1, axis2);
 
   glFlush();
 }
