@@ -18,6 +18,17 @@ target_link_libraries( circularAnnuluses
     GLEW_1130
 )
 
+add_executable( exercises_2_30_and_more
+    ${CMAKE_CURRENT_SOURCE_DIR}/exercises_2_30_and_more.cpp
+)
+target_link_libraries( exercises_2_30_and_more 
+    PRIVATE
+    OpenGL::OpenGL
+    GLUT::GLUT
+    GLEW_1130
+)
+
+
 add_executable( helix
     ${CMAKE_CURRENT_SOURCE_DIR}/helix.cpp
 )
