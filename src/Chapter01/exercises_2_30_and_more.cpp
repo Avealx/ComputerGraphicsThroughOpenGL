@@ -11,6 +11,8 @@
 #define PI 3.14159265
 #define EPS 1e-5
 
+static int N_SUBDIV = 7;
+
 void drawSine() {
   float scale = 8.0;
   float amplitude = scale / 2.0;
@@ -37,14 +39,35 @@ void drawEllipse(float axis1, float axis2) {
   glEnd();
 }
 
+void drawRing() {
+  //  int N_SUBDIV = 7;
+  float radius = 5.0;
+  float frequency = 2.0 * M_PI / N_SUBDIV;
+  float z1 = -10.0, z2 = -12.0;
+
+  glBegin(GL_TRIANGLE_STRIP);
+  for (int ii = 0; ii <= N_SUBDIV; ++ii) {
+    glVertex3f(radius * sin(frequency * ii), radius * cos(frequency * ii), z1);
+    glVertex3f(radius * sin(frequency * ii), radius * cos(frequency * ii), z2);
+  }
+  glEnd();
+}
+
 // Drawing routine.
 void drawScene(void) {
+  glClearColor(0.2, 0.3, 0.4, 1.0);
+  glClear(GL_COLOR_BUFFER_BIT);
+
   // exercise 2.30
-  drawSine();
+  // drawSine();
 
   // exercise 2.31
-  float axis1 = 8.0, axis2 = 6.0;
-  drawEllipse(axis1, axis2);
+  // float axis1 = 8.0, axis2 = 6.0;
+  // drawEllipse(axis1, axis2);
+
+  // exercise 2.34
+  glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+  drawRing();
 
   glFlush();
 }
@@ -63,9 +86,16 @@ void resize(int w, int h) {
   glLoadIdentity();
 }
 
-// Keyboard input processing routine.
 void keyInput(unsigned char key, int x, int y) {
   switch (key) {
+  case 'p':
+    ++N_SUBDIV;
+    glutPostRedisplay();
+    break;
+  case 'P':
+    --N_SUBDIV;
+    glutPostRedisplay();
+    break;
   case 27:
     exit(0);
     break;
@@ -95,5 +125,5 @@ int main(int argc, char **argv) {
   setup();
 
   glutMainLoop();
-}
+  }
 
