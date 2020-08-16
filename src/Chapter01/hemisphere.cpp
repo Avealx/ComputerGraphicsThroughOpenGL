@@ -12,18 +12,40 @@
 
 // Globals.
 static float R = 5.0; // Radius of hemisphere.
-static int p = 6; // Number of longitudinal slices.
-static int q = 4; // Number of latitudinal slices.
+static int pp = 6;    // Number of longitudinal slices.
+static int qq = 4;    // Number of latitudinal slices.
 static float Xangle = 0.0, Yangle = 0.0, Zangle = 0.0; // Angles to rotate hemisphere.
 
 // Initialization routine.
 void setup(void) { glClearColor(1.0, 1.0, 1.0, 0.0); }
 
-// Drawing routine.
-void drawScene(void)
-{
-  int i, j;
+void _drawHemispherePart(float ratio) {
+  // Array of latitudinal triangle strips, each parallel to the equator,
+  // stacked one above the other from the equator to the north pole.
+  for (int j = 0; j < ratio * qq; j++) {
+    // One latitudinal triangle strip.
+    glBegin(GL_TRIANGLE_STRIP);
+    for (int i = 0; i <= pp; i++) {
+      glVertex3f(R * cos((float)(j + 1) / qq * PI / 2.0) *
+                     cos(2.0 * (float)i / pp * PI),
+                 R * sin((float)(j + 1) / qq * PI / 2.0),
+                 -R * cos((float)(j + 1) / qq * PI / 2.0) *
+                     sin(2.0 * (float)i / pp * PI));
+      glVertex3f(
+          R * cos((float)j / qq * PI / 2.0) * cos(2.0 * (float)i / pp * PI),
+          R * sin((float)j / qq * PI / 2.0),
+          -R * cos((float)j / qq * PI / 2.0) * sin(2.0 * (float)i / pp * PI));
+    }
+    glEnd();
+  }
+}
 
+void drawHemisphere() { _drawHemispherePart(1.0); }
+
+void drawBottomHalfHemisphere() { _drawHemispherePart(1.0); }
+
+// Drawing routine.
+void drawScene(void) {
   glClear(GL_COLOR_BUFFER_BIT);
 
   glLoadIdentity();
@@ -41,25 +63,10 @@ void drawScene(void)
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glColor3f(0.0, 0.0, 0.0);
 
-  // Array of latitudinal triangle strips, each parallel to the equator, stacked
-  // one
-  // above the other from the equator to the north pole.
-  for (j = 0; j < q; j++) {
-    // One latitudinal triangle strip.
-    glBegin(GL_TRIANGLE_STRIP);
-    for (i = 0; i <= p; i++) {
-      glVertex3f(R * cos((float)(j + 1) / q * PI / 2.0) *
-                     cos(2.0 * (float)i / p * PI),
-                 R * sin((float)(j + 1) / q * PI / 2.0),
-                 -R * cos((float)(j + 1) / q * PI / 2.0) *
-                     sin(2.0 * (float)i / p * PI));
-      glVertex3f(
-          R * cos((float)j / q * PI / 2.0) * cos(2.0 * (float)i / p * PI),
-          R * sin((float)j / q * PI / 2.0),
-          -R * cos((float)j / q * PI / 2.0) * sin(2.0 * (float)i / p * PI));
-    }
-    glEnd();
-  }
+  // drawHemisphere();
+
+  // exercise 2.39 a)
+  drawBottomHalfHemisphere();
 
   glFlush();
 }
@@ -82,21 +89,21 @@ void keyInput(unsigned char key, int x, int y)
     exit(0);
     break;
   case 'P':
-    p += 1;
+    pp += 1;
     glutPostRedisplay();
     break;
   case 'p':
-    if (p > 3)
-      p -= 1;
+    if (pp > 3)
+      pp -= 1;
     glutPostRedisplay();
     break;
   case 'Q':
-    q += 1;
+    qq += 1;
     glutPostRedisplay();
     break;
   case 'q':
-    if (q > 3)
-      q -= 1;
+    if (qq > 3)
+      qq -= 1;
     glutPostRedisplay();
     break;
   case 'x':
@@ -145,9 +152,9 @@ void printInteraction(void)
 {
   std::cout << "Interaction:" << std::endl;
   std::cout
-      << "Press P/p to increase/decrease the number of longitudinal slices."
+      << "Press P/pp to increase/decrease the number of longitudinal slices."
       << std::endl
-      << "Press Q/q to increase/decrease the number of latitudinal slices."
+      << "Press Q/qq to increase/decrease the number of latitudinal slices."
       << std::endl
       << "Press x, X, y, Y, z, Z to turn the hemisphere." << std::endl;
 }
