@@ -19,10 +19,11 @@ static float Xangle = 0.0, Yangle = 0.0, Zangle = 0.0; // Angles to rotate hemis
 // Initialization routine.
 void setup(void) { glClearColor(1.0, 1.0, 1.0, 0.0); }
 
-void _drawHemispherePart(float qq_ratio, float pp_qq_ratio = 1.0) {
+void _drawHemispherePart(float qq_ratio, float pp_qq_ratio = 1.0,
+                         float qq_ratio_b = 0.0) {
   // Array of latitudinal triangle strips, each parallel to the equator,
   // stacked one above the other from the equator to the north pole.
-  for (int j = 0; j < qq_ratio * qq; j++) {
+  for (int j = qq_ratio_b * qq; j < qq_ratio * qq; j++) {
     // One latitudinal triangle strip.
     glBegin(GL_TRIANGLE_STRIP);
     for (int i = 0; i <= pp * pp_qq_ratio; i++) {
@@ -77,6 +78,8 @@ void drawSliceOfHemisphere() {
   _drawHemisphereSliceBottom(qq_ratio, pp_ratio);
 }
 
+void drawSphere() { _drawHemispherePart(1.0, 1.0, -1.0); }
+
 // Drawing routine.
 void drawScene(void) {
   glClear(GL_COLOR_BUFFER_BIT);
@@ -101,7 +104,10 @@ void drawScene(void) {
   // exercise 2.39 a)
   //  drawBottomHalfHemisphere();
   // exercise 2.39 b)
-  drawSliceOfHemisphere();
+  // drawSliceOfHemisphere();
+
+  // exercise 2.40
+  drawSphere();
 
   glFlush();
 }
