@@ -19,13 +19,13 @@ static float Xangle = 0.0, Yangle = 0.0, Zangle = 0.0; // Angles to rotate hemis
 // Initialization routine.
 void setup(void) { glClearColor(1.0, 1.0, 1.0, 0.0); }
 
-void _drawHemispherePart(float ratio) {
+void _drawHemispherePart(float qq_ratio, float pp_qq_ratio = 1.0) {
   // Array of latitudinal triangle strips, each parallel to the equator,
   // stacked one above the other from the equator to the north pole.
-  for (int j = 0; j < ratio * qq; j++) {
+  for (int j = 0; j < qq_ratio * qq; j++) {
     // One latitudinal triangle strip.
     glBegin(GL_TRIANGLE_STRIP);
-    for (int i = 0; i <= pp; i++) {
+    for (int i = 0; i <= pp * pp_qq_ratio; i++) {
       glVertex3f(R * cos((float)(j + 1) / qq * PI / 2.0) *
                      cos(2.0 * (float)i / pp * PI),
                  R * sin((float)(j + 1) / qq * PI / 2.0),
@@ -40,9 +40,42 @@ void _drawHemispherePart(float ratio) {
   }
 }
 
+void _drawHemisphereSliceSide(float qq_ratio, float pp_ratio) {
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex3f(0.0, 0.0, 0.0);
+  for (int j = 0; j <= qq * qq_ratio; j++) {
+    glVertex3f(R * cos((float)(j) / qq * PI / 2.0) *
+                   cos(2.0 * (int)(pp * pp_ratio) / pp * PI),
+               R * sin((float)(j) / qq * PI / 2.0),
+               -R * cos((float)(j) / qq * PI / 2.0) *
+                   sin(2.0 * (int)(pp * pp_ratio) / pp * PI));
+  }
+  glEnd();
+}
+
+void _drawHemisphereSliceBottom(float qq_ratio, float pp_ratio) {
+  glBegin(GL_TRIANGLE_FAN);
+  glVertex3f(0.0, 0.0, 0.0);
+  for (int i = 0; i <= pp * pp_ratio; i++) {
+    glVertex3f(
+        R * cos((float)(0) / qq * PI / 2.0) * cos(2.0 * (float)i / pp * PI),
+        R * sin((float)(0) / qq * PI / 2.0),
+        -R * cos((float)(0) / qq * PI / 2.0) * sin(2.0 * (float)i / pp * PI));
+  }
+  glEnd();
+}
+
 void drawHemisphere() { _drawHemispherePart(1.0); }
 
-void drawBottomHalfHemisphere() { _drawHemispherePart(1.0); }
+void drawBottomHalfHemisphere() { _drawHemispherePart(0.5); }
+
+void drawSliceOfHemisphere() {
+  float qq_ratio = 1.0, pp_ratio = 0.3;
+  _drawHemispherePart(qq_ratio, pp_ratio);
+  _drawHemisphereSliceSide(qq_ratio, 0.0);
+  _drawHemisphereSliceSide(qq_ratio, pp_ratio);
+  _drawHemisphereSliceBottom(qq_ratio, pp_ratio);
+}
 
 // Drawing routine.
 void drawScene(void) {
@@ -66,7 +99,9 @@ void drawScene(void) {
   // drawHemisphere();
 
   // exercise 2.39 a)
-  drawBottomHalfHemisphere();
+  //  drawBottomHalfHemisphere();
+  // exercise 2.39 b)
+  drawSliceOfHemisphere();
 
   glFlush();
 }
