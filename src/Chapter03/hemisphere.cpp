@@ -1,9 +1,10 @@
 // original: hemisphere.cpp by Sumanta Guha.
 //
 // see http://www.sumantaguha.com/downloads
-///////////////////////////////////////////////////////////////////////////////////////
+
 #include <cmath>
 #include <iostream>
+#include <vector>
 
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -12,35 +13,54 @@
 
 // Globals.
 static float R = 5.0; // Radius of hemisphere.
-static int PP = 6;    // Number of longitudinal slices.
-static int QQ = 4;    // Number of latitudinal slices.
+static int pp = 6;    // Number of longitudinal slices.
+static int qq = 4;    // Number of latitudinal slices.
 static float Xangle = 0.0, Yangle = 0.0, Zangle = 0.0; // Angles to rotate hemisphere.
 
-// Initialization routine.
-void setup(void) { glClearColor(1.0, 1.0, 1.0, 0.0); }
+static std::vector<float> vertices;
+static std::vector<unsigned int> indices;
 
-void _drawHemispherePart() {
-  // Array of latitudinal triangle strips, each parallel to the equator,
-  // stacked one above the other from the equator to the north pole.
-  for (int j = 0; j < QQ; j++) {
-    // One latitudinal triangle strip.
-    glBegin(GL_TRIANGLE_STRIP);
-    for (int i = 0; i <= PP; i++) {
-      glVertex3f(R * cos((float)(j + 1) / QQ * PI / 2.0) *
-                     cos(2.0 * (float)i / PP * PI),
-                 R * sin((float)(j + 1) / QQ * PI / 2.0),
-                 -R * cos((float)(j + 1) / QQ * PI / 2.0) *
-                     sin(2.0 * (float)i / PP * PI));
-      glVertex3f(
-          R * cos((float)j / QQ * PI / 2.0) * cos(2.0 * (float)i / PP * PI),
-          R * sin((float)j / QQ * PI / 2.0),
-          -R * cos((float)j / QQ * PI / 2.0) * sin(2.0 * (float)i / PP * PI));
+// declarations
+void _fillHemisphere();
+
+// Initialization routine.
+void setup(void) {
+  glClearColor(1.0, 1.0, 1.0, 0.0);
+
+  // Enable two vertex arrays: co-ordinates and color.
+  glEnableClientState(GL_VERTEX_ARRAY);
+
+  _fillHemisphere();
+}
+
+void _fillHemisphere() {
+  // clang-format off
+  vertices.clear(); 
+  indices.clear();
+  unsigned int idx = 0;
+  for (int j = 0; j < qq; j++) {
+    for (int i = 0; i <= pp; i++) {
+      vertices.push_back(R * cos((float)(j + 1) / qq * PI / 2.0) * cos(2.0 * (float)i / pp * PI));
+      vertices.push_back(R * sin((float)(j + 1) / qq * PI / 2.0));
+      vertices.push_back(-R * cos((float)(j + 1) / qq * PI / 2.0) * sin(2.0 * (float)i / pp * PI));
+      indices.push_back(idx++);
+      vertices.push_back(R * cos((float)j / qq * PI / 2.0) * cos(2.0 * (float)i / pp * PI));
+      vertices.push_back(R * sin((float)j / qq * PI / 2.0));
+      vertices.push_back(-R * cos((float)j / qq * PI / 2.0) * sin(2.0 * (float)i / pp * PI));
+      indices.push_back(idx++);
     }
-    glEnd();
+  }
+  // clang-format on
+}
+
+void _drawHemisphere() {
+  for (int j = 0; j < qq; j++) {
+    glVertexPointer(3, GL_FLOAT, 0, vertices.data());
+    glDrawElements(GL_TRIANGLE_STRIP, (2*pp + 2), GL_UNSIGNED_INT, indices.data() + j*(2*pp+2));
   }
 }
 
-void drawHemisphere() { _drawHemispherePart(1.0); }
+void drawHemisphere() { _drawHemisphere(); }
 
 // Drawing routine.
 void drawScene(void) {
@@ -61,15 +81,7 @@ void drawScene(void) {
   glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
   glColor3f(0.0, 0.0, 0.0);
 
-  // drawHemisphere();
-
-  // exercise 2.39 a)
-  //  drawBottomHalfHemisphere();
-  // exercise 2.39 b)
-  // drawSliceOfHemisphere();
-
-  // exercise 2.40
-  drawSphere();
+  drawHemisphere();
 
   glFlush();
 }
@@ -92,21 +104,27 @@ void keyInput(unsigned char key, int x, int y)
     exit(0);
     break;
   case 'P':
-    PP += 1;
+    pp += 1;
+    _fillHemisphere();
     glutPostRedisplay();
     break;
   case 'p':
-    if (PP > 3)
-      PP -= 1;
+    if (pp > 3) {
+      pp -= 1;
+      _fillHemisphere();
+    }
     glutPostRedisplay();
     break;
   case 'Q':
-    QQ += 1;
+    qq += 1;
+    _fillHemisphere();
     glutPostRedisplay();
     break;
   case 'q':
-    if (QQ > 3)
-      QQ -= 1;
+    if (qq > 3) {
+      qq -= 1;
+      _fillHemisphere();
+    }
     glutPostRedisplay();
     break;
   case 'x':
@@ -155,9 +173,9 @@ void printInteraction(void)
 {
   std::cout << "Interaction:" << std::endl;
   std::cout
-      << "Press P/p to increase/decrease the number of longitudinal slices."
+      << "Press P/pp to increase/decrease the number of longitudinal slices."
       << std::endl
-      << "Press Q/Q to increase/decrease the number of latitudinal slices."
+      << "Press Q/qq to increase/decrease the number of latitudinal slices."
       << std::endl
       << "Press x, X, y, Y, z, Z to turn the hemisphere." << std::endl;
 }

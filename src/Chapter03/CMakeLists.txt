@@ -1,3 +1,13 @@
+add_executable( hemisphere03
+    ${CMAKE_CURRENT_SOURCE_DIR}/hemisphere.cpp
+)
+target_link_libraries( hemisphere03 
+    PRIVATE
+    OpenGL::OpenGL
+    GLUT::GLUT
+    GLEW_1130
+)
+
 add_executable( squareAnnulus1
     ${CMAKE_CURRENT_SOURCE_DIR}/squareAnnulus1.cpp
 )
